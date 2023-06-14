@@ -25,15 +25,15 @@ camera.position.setZ(30);
 renderer.render(scene, camera);
 
 const earthtexture = new THREE.TextureLoader().load("earth.jpeg");
-
+const mountains = new THREE.TextureLoader().load("bump.jpeg");
 const sphere = new THREE.Mesh(
   new THREE.SphereGeometry(10, 32, 16),
-  new THREE.MeshPhongMaterial({
+  new THREE.MeshStandardMaterial({
     map: earthtexture,
-    normalMap: new THREE.TextureLoader().load("bump.jpeg"),
-    // bumpScale: 0.05,
-    specularMap: new THREE.TextureLoader().load("water_4k.png"),
-    specular: new THREE.Color("grey"),
+    normalMap: mountains,
+    // // bumpScale: 0.05,
+    // specularMap: new THREE.TextureLoader().load("water_4k.png"),
+    // specular: new THREE.Color("grey"),
   })
 );
 // sphere.scale(0.5, 0.5);
@@ -46,7 +46,22 @@ const sphere = new THREE.Mesh(
 //   })
 // );
 
-scene.add(sphere);
+const moonObj = new THREE.Object3D();
+
+const moontextture = new THREE.TextureLoader().load("moon.jpg");
+const normalTexture = new THREE.TextureLoader().load("normal.jpg");
+
+const moon = new THREE.Mesh(
+  new THREE.SphereGeometry(4, 32, 16),
+  new THREE.MeshStandardMaterial({
+    map: moontextture,
+    normalMap: normalTexture,
+  })
+);
+
+moonObj.add(moon);
+moon.position.x = 35;
+scene.add(sphere, moonObj);
 // scene.add(sphere11);
 
 const pointLight = new THREE.PointLight(0xffffff);
@@ -54,6 +69,7 @@ const ambLight = new THREE.AmbientLight(0xffffff);
 pointLight.position.set(100, 100, 30);
 
 scene.add(ambLight);
+// scene.add(pointLight);
 
 const gridhelper = new THREE.GridHelper(200, 50);
 
@@ -68,7 +84,7 @@ function addStars() {
 
   const [x, y, z] = Array(3)
     .fill()
-    .map(() => THREE.MathUtils.randFloatSpread(100));
+    .map(() => THREE.MathUtils.randFloatSpread(500));
 
   star.position.set(x, y, z);
 
@@ -83,8 +99,8 @@ scene.background = space;
 function moveCamera() {
   const pos = document.body.getBoundingClientRect().top;
 
-  camera.position.x = pos * -0.003;
-  camera.position.y = pos * -0.01;
+  camera.position.x = pos * -0.008;
+  camera.position.y = pos * -0.03;
   // camera.position.z = pos * 0.001;
 }
 
@@ -93,10 +109,11 @@ document.body.onscroll = moveCamera;
 function animation() {
   requestAnimationFrame(animation);
 
-  sphere.rotation.x += 0.01;
+  // sphere.rotation.x += 0.01;
   sphere.rotation.y += 0.005;
   // sphere.rotation.z += 0.01;
-
+  moonObj.rotation.y += 0.001;
+  moon.rotation.y += 0.001;
   controls.update();
 
   renderer.render(scene, camera);
