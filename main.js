@@ -93,7 +93,7 @@ function addStars() {
 
 Array(200).fill().forEach(addStars);
 
-const space = new THREE.TextureLoader().load("space1.jpeg");
+const space = new THREE.TextureLoader().load("./space1.jpeg");
 scene.background = space;
 
 function moveCamera() {
